@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Legal - Sistema Laboral Bolivia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Vista de Login / Registro -->
+    <div id="auth-view" class="view active-view">
+        <div class="auth-container glass-panel">
+            <div class="auth-header">
+                <h2>RAG Legal <span class="highlight">Bolivia</span></h2>
+                <p>Asistente Jurídico Inteligente</p>
+            </div>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchAuthTab('login')">Ingresar</button>
+                <button class="tab-btn" onclick="switchAuthTab('register')">Registro</button>
+            </div>
+
+            <!-- Formulario de Login -->
+            <form id="login-form" class="auth-form active-form" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="login-email" placeholder="Correo electrónico" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="login-password" placeholder="Contraseña" required>
+                </div>
+                <button type="submit" class="btn primary-btn">Iniciar Sesión</button>
+                <p class="forgot-link" onclick="handleRecover()">¿Olvidaste tu contraseña?</p>
+            </form>
+
+            <!-- Formulario de Registro -->
+            <form id="register-form" class="auth-form" onsubmit="handleRegister(event)">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="reg-nombre" placeholder="Nombre" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="reg-apellido" placeholder="Apellido" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="reg-email" placeholder="Correo electrónico" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="reg-password" placeholder="Contraseña" required>
+                </div>
+                <button type="submit" class="btn primary-btn">Crear Cuenta</button>
+            </form>
+            
+            <div id="auth-msg" class="msg"></div>
+        </div>
+    </div>
+
+    <!-- Vista Principal (Dashboard) -->
+    <div id="dashboard-view" class="view">
+        <nav class="sidebar glass-panel">
+            <div class="sidebar-header">
+                <h3>RAG <span class="highlight">Legal</span></h3>
+            </div>
+            <ul class="nav-links">
+                <li class="active" onclick="switchMainTab('chat')"><i class="fas fa-comment-gavel"></i> Consultas Normativas</li>
+                <li onclick="switchMainTab('calc')"><i class="fas fa-calculator"></i> Cálculos Laborales</li>
+                <li onclick="switchMainTab('docs')"><i class="fas fa-file-signature"></i> Generador de Documentos</li>
+                <li onclick="switchMainTab('config')"><i class="fas fa-cog"></i> Configuración IA</li>
+            </ul>
+            <div class="user-info">
+                <p id="user-name-display"><i class="fas fa-user-circle"></i> Usuario</p>
+                <button class="btn logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <!-- Pestaña Chat (RAG) -->
+            <section id="chat-tab" class="dashboard-tab active-tab">
+                <header class="tab-header">
+                    <h2>Asistente Normativo (RAG)</h2>
+                    <p>Módulo 5.5: Consultas a la base de conocimiento jurídica</p>
+                </header>
+                <div class="chat-container glass-panel">
+                    <div id="chat-messages" class="chat-messages">
+                        <div class="message system">
+                            <div class="msg-avatar"><i class="fas fa-robot"></i></div>
+                            <div class="msg-content">Hola. Soy el agente virtual capacitado en la normativa laboral de Bolivia. ¿En qué puedo ayudarte hoy?</div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="Ej: ¿Cuántos días de vacación corresponden a los 5 años?" onkeypress="handleChatEnter(event)">
+                        <button class="btn primary-btn" onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pestaña Cálculos -->
+            <section id="calc-tab" class="dashboard-tab">
+                <header class="tab-header">
+                    <h2>Cálculos Laborales</h2>
+                    <p>Módulo 5.7: Estimación de beneficios sociales</p>
+                </header>
+                <div class="calc-container glass-panel">
+                    <form id="calc-form" onsubmit="handleCalc(event)">
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>Salario Base (Bs.)</label>
+                                <input type="number" id="calc-salario" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Motivo de Salida</label>
+                                <select id="calc-motivo" required>
+                                    <option value="despido">Despido Injustificado</option>
+                                    <option value="renuncia">Renuncia Voluntaria</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Fecha de Ingreso</label>
+                                <input type="date" id="calc-ingreso" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Fecha de Salida</label>
+                                <input type="date" id="calc-salida" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn primary-btn w-full mt-2">Calcular Beneficios</button>
+                    </form>
+                    <div id="calc-result" class="result-area hidden">
+                        <!-- Resultados insertados dinámicamente -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pestaña Documentos -->
+            <section id="docs-tab" class="dashboard-tab">
+                <header class="tab-header">
+                    <h2>Generador de Documentos</h2>
+                    <p>Módulo 5.6: Elaboración automática de documentos formales</p>
+                </header>
+                <div class="docs-container glass-panel">
+                    <form id="doc-form" onsubmit="handleDocGen(event)">
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>Tipo de Documento</label>
+                                <select id="doc-tipo" required>
+                                    <option value="renuncia">Carta de Renuncia</option>
+                                    <option value="solicitud">Solicitud de Vacación / Permiso</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Nombre Completo</label>
+                                <input type="text" id="doc-nombre" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Carnet de Identidad</label>
+                                <input type="text" id="doc-ci" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Cargo que Ocupa</label>
+                                <input type="text" id="doc-cargo" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Motivo</label>
+                                <input type="text" id="doc-motivo" placeholder="Ej: Motivos personales, salud, viaje..." required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn primary-btn w-full mt-2"><i class="fas fa-file-pdf"></i> Generar PDF</button>
+                    </form>
+                    <div id="doc-result" class="result-area hidden">
+                        <!-- Link de descarga insertado dinámicamente -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pestaña Configuración -->
+            <section id="config-tab" class="dashboard-tab">
+                <header class="tab-header">
+                    <h2>Configuración del Sistema IA</h2>
+                    <p>Módulo 5.4: Ajuste del modelo de inteligencia artificial</p>
+                </header>
+                <div class="config-container glass-panel">
+                    <form id="config-form" onsubmit="handleConfig(event)">
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>Modelo Local (Ollama)</label>
+                                <select id="conf-model">
+                                    <option value="llama3">Llama 3</option>
+                                    <option value="mistral">Mistral</option>
+                                    <option value="phi3">Phi-3</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Temperatura (<span id="temp-val">0.5</span>)</label>
+                                <input type="range" id="conf-temp" min="0" max="1" step="0.1" value="0.5" oninput="document.getElementById('temp-val').innerText=this.value">
+                                <small>0 = Respuestas precisas, 1 = Respuestas creativas</small>
+                            </div>
+                            <div class="input-group">
+                                <label>Max Tokens</label>
+                                <input type="number" id="conf-tokens" value="500">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn primary-btn w-full mt-2"><i class="fas fa-save"></i> Guardar Configuración</button>
+                    </form>
+                    <div id="config-msg" class="msg mt-2"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "RAG Legal (pgVector) - Puerto 5432",
+      "Group": "Proyecto Oficial",
+      "Host": "pgvector",
+      "Port": 5432,
+      "MaintenanceDB": "rag_legal",
+      "Username": "rag_user",
+      "SSLMode": "prefer",
+      "PassFile": "/pgpass"
+    },
+    "2": {
+      "Name": "Sistema Laboral (PostgreSQL) - Puerto 5433",
+      "Group": "Proyecto Oficial",
+      "Host": "postgres_laboral",
+      "Port": 5432,
+      "MaintenanceDB": "sistema_laboral",
+      "Username": "laboral_user",
+      "SSLMode": "prefer",
+      "PassFile": "/pgpass"
+    }
+  }
+}
